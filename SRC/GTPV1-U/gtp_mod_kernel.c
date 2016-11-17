@@ -51,6 +51,12 @@ int gtp_mod_kernel_init(int *fd0, int *fd1u, struct in_addr *ue_net, int mask, i
       },
   };
 
+  int enable = 1;
+  if (setsockopt (*fd1u, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof (int)) < 0) {
+    OAILOG_ERROR (LOG_GTPV1U,"Error setting socket options");
+    return RETURNerror;
+  }
+
   if (bind(*fd0, (struct sockaddr *) &sockaddr_fd0,
       sizeof(sockaddr_fd0)) < 0) {
     OAILOG_ERROR (LOG_GTPV1U,"bind GTPv0 port");
