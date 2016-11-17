@@ -1037,4 +1037,3 @@ error_event:
     free_wrapper (new_item_p);
   }
 }
-
