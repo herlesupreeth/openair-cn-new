@@ -2,9 +2,9 @@
 # Licensed to the OpenAirInterface (OAI) Software Alliance under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
-# The OpenAirInterface Software Alliance licenses this file to You under 
+# The OpenAirInterface Software Alliance licenses this file to You under
 # the Apache License, Version 2.0  (the "License"); you may not use this file
-# except in compliance with the License.  
+# except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #      http://www.apache.org/licenses/LICENSE-2.0
@@ -148,10 +148,11 @@ set(CMAKE_C_FLAGS
 add_definitions(-DCMAKER)
 
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -fstack-protector-all -g -DMALLOC_CHECK_=3 -DDEBUG_IS_ON=1 -DTRACE_IS_ON=1 -O0")
-set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS} -g -DMALLOC_CHECK_=3  -DDEBUG_IS_ON -O1") 
+#set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS} -g -DMALLOC_CHECK_=3  -DDEBUG_IS_ON -O1")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS} -g -DMALLOC_CHECK_=3  -DDEBUG_IS_ON -O3")
 
 ################################################################
-# Git Version 
+# Git Version
 ################################################################
 set(GIT_BRANCH        "UNKNOWN")
 set(GIT_COMMIT_HASH   "UNKNOWN")
@@ -175,7 +176,7 @@ if(GIT_FOUND)
     OUTPUT_VARIABLE GIT_COMMIT_HASH
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
-  
+
   # Get the latest commit date of the working branch
   execute_process(
     COMMAND git log -1 --format=%cd
@@ -219,8 +220,8 @@ add_boolean_option( DISABLE_ITTI_DETECT_SUB_TASK_ID False    " ")
 add_boolean_option( DISPLAY_LICENCE_INFO            False    "If a module has a licence banner to show")
 add_boolean_option( ENABLE_ITTI                     True     "ITTI is internal messaging, should remain enabled for most targets")
 add_boolean_option( ENABLE_ITTI_ANALYZER            False    "ITTI Analyzer is a GUI based on GTK that displays the ITTI messages exchanged between tasks")
-add_integer_option( ITTI_TASK_STACK_SIZE            0        "pthread allocated stack size in bytes of an ITTI task, if 0, use default stack size ") 
-add_integer_option( ITTI_LITE                       0        "Do not use ITTI systematically for each message exchanged between layer modules") 
+add_integer_option( ITTI_TASK_STACK_SIZE            0        "pthread allocated stack size in bytes of an ITTI task, if 0, use default stack size ")
+add_integer_option( ITTI_LITE                       0        "Do not use ITTI systematically for each message exchanged between layer modules")
 add_boolean_option( MESSAGE_CHART_GENERATOR         False    "For generating sequence diagrams")
 add_boolean_option( DISABLE_EXECUTE_SHELL_COMMAND   False    "disable execution of C int system(const char *command);")
 # NAS LAYER OPTIONS
@@ -260,14 +261,14 @@ if (${ENABLE_ITTI})
   if (${ENABLE_ITTI_ANALYZER})
     set(ITTI_FILES
     ${ITTI_FILES}
-    ${ITTI_DIR}/intertask_interface_dump.c 
+    ${ITTI_DIR}/intertask_interface_dump.c
     ${OPENAIRCN_BIN_DIR}/messages_xml.h )
-    
+
     include_directories ("${OPENAIRCN_BIN_DIR}")
   endif (${ENABLE_ITTI_ANALYZER})
-    
+
   add_library(ITTI ${ITTI_FILES})
-    
+
   set(ITTI_LIB ITTI)
 endif (${ENABLE_ITTI})
 
@@ -409,7 +410,7 @@ add_library(HASHTABLE
 include_directories(${OPENAIRCN_DIR}/SRC/UTILS/HASHTABLE)
 
 if (MESSAGE_CHART_GENERATOR)
-  add_library(MSC  
+  add_library(MSC
     ${OPENAIRCN_DIR}/SRC/UTILS/MSC/msc.c
   )
   set(MSC_LIB MSC)
@@ -445,7 +446,7 @@ set(CN_UTILS_SRC
   ${OPENAIRCN_DIR}/SRC/UTILS/dynamic_memory_check.c
   ${OPENAIRCN_DIR}/SRC/UTILS/pid_file.c
   ${OPENAIRCN_DIR}/SRC/UTILS/TLVEncoder.c
-  ${OPENAIRCN_DIR}/SRC/UTILS/TLVDecoder.c  
+  ${OPENAIRCN_DIR}/SRC/UTILS/TLVDecoder.c
   )
 
 if (LOG_OAI)
@@ -552,7 +553,7 @@ set(libnas_api_OBJS
   ${NAS_SRC}API/NETWORK/as_message.c
   ${NAS_SRC}API/NETWORK/nas_message.c
   )
-  
+
 set(libnas_emm_msg_OBJS
   ${NAS_SRC}EMM/MSG/AttachAccept.c
   ${NAS_SRC}EMM/MSG/AttachComplete.c
@@ -585,7 +586,7 @@ set(libnas_emm_msg_OBJS
   ${NAS_SRC}EMM/MSG/TrackingAreaUpdateRequest.c
   ${NAS_SRC}EMM/MSG/UplinkNasTransport.c
 )
-  
+
 set(libnas_esm_msg_OBJS
   ${NAS_SRC}ESM/MSG/ActivateDedicatedEpsBearerContextAccept.c
   ${NAS_SRC}ESM/MSG/ActivateDedicatedEpsBearerContextReject.c
@@ -716,7 +717,7 @@ set(libnas_mme_emm_OBJS
   ${NAS_SRC}EMM/ServiceRequestHdl.c
   ${NAS_SRC}EMM/TrackingAreaUpdate.c
 )
-  
+
 set(libnas_mme_emm_sap_OBJS
   ${NAS_SRC}EMM/SAP/emm_as.c
   ${NAS_SRC}EMM/SAP/emm_cn.c
@@ -752,7 +753,7 @@ set(libnas_mme_esm_sap_OBJS
   ${NAS_SRC}ESM/SAP/esm_send.c
   ${NAS_SRC}ESM/SAP/esm_sap.c
   )
-  
+
 add_library(LIB_NAS_MME
   ${NAS_SRC}nas_itti_messaging.c
   ${NAS_SRC}nas_if_s1.c
@@ -768,9 +769,9 @@ add_library(LIB_NAS_MME
   ${libnas_mme_emm_OBJS}
   ${libnas_mme_emm_sap_OBJS}
   ${libnas_mme_esm_OBJS}
-  ${libnas_mme_esm_sap_OBJS} 
+  ${libnas_mme_esm_sap_OBJS}
   )
-  
+
 include_directories(${NAS_SRC})
 include_directories(${NAS_SRC}/API/MME)
 include_directories(${NAS_SRC}/EMM)
@@ -873,8 +874,8 @@ add_definitions(-DASN1_MINIMUM_VERSION=924)
 # add executables for operation
 #################################
 
-  
-# MME standalone 
+
+# MME standalone
 ################################
 add_executable(mme
   ${OPENAIRCN_DIR}/SRC/OAI_MME/oai_mme_log.c
@@ -907,7 +908,7 @@ target_link_libraries (spgw
   -Wl,--start-group
   GTPV1U SGW S11_SGW GTPV2C UDP_SERVER LFDS ${MSC_LIB} ${ITTI_LIB} CN_UTILS HASHTABLE BSTR
   -Wl,--end-group
-  pthread m rt gtpnl ${CONFIG_LIBRARIES}  
+  pthread m rt gtpnl ${CONFIG_LIBRARIES}
   )
 
 # auth_request is a helper for scenario builder
@@ -960,7 +961,7 @@ add_test(NAME test_imsi_convert COMMAND test_mme_app_ue_context_imsi)
 #    kdf
 #    aes128_cmac_encrypt
 #    secu_knas_encrypt_eia2)
-#    
+#
 #  add_executable(test_${myExe}
 #    ${OPENAIRCN_DIR}/SRC/TEST/test_util.c
 #    ${OPENAIRCN_DIR}/SRC/TEST/test_${myExe}.c
@@ -994,13 +995,13 @@ add_test(NAME test_imsi_convert COMMAND test_mme_app_ue_context_imsi)
     add_custom_command (
     OUTPUT ${OPENAIRCN_BIN_DIR}/messages.xml
       COMMAND gccxml ${itti_compiler_options} -fxml=${OPENAIRCN_BIN_DIR}/messages.xml ${ITTI_H}
-      DEPENDS ${S1AP_OAI_generated} 
+      DEPENDS ${S1AP_OAI_generated}
     )
 
     add_custom_command (
       OUTPUT ${OPENAIRCN_BIN_DIR}/messages_xml.h
       COMMAND sed -e 's/ *//'   -e 's/\"/\\\\\"/g' -e 's/^/\"/' -e 's/$$/\\\\n\"/' ${OPENAIRCN_BIN_DIR}/messages.xml  > ${OPENAIRCN_BIN_DIR}/messages_xml.h
-      DEPENDS ${OPENAIRCN_BIN_DIR}/messages.xml 
+      DEPENDS ${OPENAIRCN_BIN_DIR}/messages.xml
     )
   endif(ENABLE_ITTI_ANALYZER)
 

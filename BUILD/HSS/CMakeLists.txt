@@ -2,9 +2,9 @@
 # Licensed to the OpenAirInterface (OAI) Software Alliance under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
-# The OpenAirInterface Software Alliance licenses this file to You under 
+# The OpenAirInterface Software Alliance licenses this file to You under
 # the Apache License, Version 2.0  (the "License"); you may not use this file
-# except in compliance with the License.  
+# except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #      http://www.apache.org/licenses/LICENSE-2.0
@@ -81,7 +81,8 @@ set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInf
 #
 set(CMAKE_C_FLAGS                  "${CMAKE_C_FLAGS} -msse4.2 -std=gnu99 -Wall -Wstrict-prototypes -fno-strict-aliasing -rdynamic -funroll-loops -Wno-packed-bitfield-compat -DCMAKER")
 set(CMAKE_C_FLAGS_DEBUG            "${CMAKE_C_FLAGS_DEBUG} -ggdb -DMALLOC_CHECK_=3")
-set(CMAKE_C_FLAGS_RELWITHDEBINFO   "${CMAKE_C_FLAGS_RELWITHDEBINFO} -ggdb -DMALLOC_CHECK_=3 -O2")
+#set(CMAKE_C_FLAGS_RELWITHDEBINFO   "${CMAKE_C_FLAGS_RELWITHDEBINFO} -ggdb -DMALLOC_CHECK_=3 -O2")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO   "${CMAKE_C_FLAGS_RELWITHDEBINFO} -ggdb -DMALLOC_CHECK_=3 -O3")
 
 
 include(FindPkgConfig)
@@ -138,7 +139,7 @@ if(GIT_FOUND)
     OUTPUT_VARIABLE GIT_COMMIT_HASH
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
-  
+
   # Get the latest commit date of the working branch
   execute_process(
     COMMAND git log -1 --format=%cd
@@ -265,23 +266,23 @@ add_library(hss_utils ${utils_SRC} ${utils_HDR})
 ################################################################################
 include_directories( ${UTILS_GENERATED_DIR} ${OAI_HSS_DIR}/utils ${OAI_HSS_DIR}/s6a ${OAI_HSS_DIR}/db ${OAI_HSS_DIR}/auc ${OAI_HSS_DIR}/access_restriction)
 ADD_EXECUTABLE(oai_hss  ${OAI_HSS_DIR}/hss_main.c)
-target_link_libraries (oai_hss 
-                       -Wl,-whole-archive 
-                       hss_access_restriction  
+target_link_libraries (oai_hss
+                       -Wl,-whole-archive
+                       hss_access_restriction
                        hss_auc
                        hss_db
-                       hss_s6a 
+                       hss_s6a
                        hss_utils
                        -Wl,-no-whole-archive
                        gmp
-                       ${MySQL_LIBRARY} 
-                       ${NETTLE_LIBRARIES} 
+                       ${MySQL_LIBRARY}
+                       ${NETTLE_LIBRARIES}
                        ${FREEDIAMETER_LIBRARIES}
-                       ${CONFIG_LIBRARIES}  
-                       ${CMAKE_THREAD_LIBS_INIT} 
+                       ${CONFIG_LIBRARIES}
+                       ${CMAKE_THREAD_LIBS_INIT}
                        gnutls)
 
 # Default parameters
 # Does not work on simple install (fqdn in /etc/hosts 127.0.1.1)
-add_boolean_option(DAEMONIZE         false          "If true, HSS execute like a daemon (fork).")  
+add_boolean_option(DAEMONIZE         false          "If true, HSS execute like a daemon (fork).")
 
