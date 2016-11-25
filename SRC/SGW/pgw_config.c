@@ -192,22 +192,28 @@ int pgw_config_process (pgw_config_t * config_pP)
       bdestroy(system_cmd);
     }
 
-    uint32_t min_mtu = config_pP->ipv4.mtu_SGI;
-    // 36 = GTPv1-U min header size
-    if ((config_pP->ipv4.mtu_S5_S8 - 36) < min_mtu) {
-      min_mtu = config_pP->ipv4.mtu_S5_S8 - 36;
-    }
-    if (config_pP->ue_tcp_mss_clamp) {
-      system_cmd = bformat ("iptables -t mangle -I FORWARD -s %s/%d   -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss %u",
-          inet_ntoa(config_pP->ue_pool_addr[i]), config_pP->ue_pool_mask[i], min_mtu - 40);
-      pgw_system (system_cmd, PGW_ABORT_ON_ERROR, __FILE__, __LINE__);
-      btrunc(system_cmd, 0);
+    // uint32_t min_mtu = config_pP->ipv4.mtu_SGI;
+    // // 36 = GTPv1-U min header size
+    // if ((config_pP->ipv4.mtu_S5_S8 - 36) < min_mtu) {
+    //   min_mtu = config_pP->ipv4.mtu_S5_S8 - 36;
+    // }
+    // if (config_pP->ue_tcp_mss_clamp) {
+    //   system_cmd = bformat ("iptables -t mangle -I FORWARD -s %s/%d -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss %u",
+    //       inet_ntoa(config_pP->ue_pool_addr[i]), config_pP->ue_pool_mask[i], min_mtu - 40);
+    //   pgw_system (system_cmd, PGW_ABORT_ON_ERROR, __FILE__, __LINE__);
+    //   btrunc(system_cmd, 0);
 
-      bassignformat (system_cmd, "iptables -t mangle -I FORWARD -d %s/%d -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss %u",
-          inet_ntoa(config_pP->ue_pool_addr[i]), config_pP->ue_pool_mask[i], min_mtu - 40);
-      pgw_system (system_cmd, PGW_ABORT_ON_ERROR, __FILE__, __LINE__);
-      bdestroy(system_cmd);
-    }
+    //   bassignformat (system_cmd, "iptables -t mangle -I FORWARD -d %s/%d -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss %u",
+    //       inet_ntoa(config_pP->ue_pool_addr[i]), config_pP->ue_pool_mask[i], min_mtu - 40);
+    //   pgw_system (system_cmd, PGW_ABORT_ON_ERROR, __FILE__, __LINE__);
+    //   bdestroy(system_cmd);
+    // }
+
+    // Clamp MSS to 1360 for all packets with MSS greater than 1360
+    system_cmd = bformat ("iptables -t mangle -A OUTPUT -o %s -p tcp -m tcp --tcp-flags SYN,RST SYN -s %s/%d -m tcpmss --mss 1361:1600 -j TCPMSS --set-mss 1360",
+    bdata(config_pP->ipv4.if_name_SGI), inet_ntoa(config_pP->ue_pool_addr[i]), config_pP->ue_pool_mask[i]);
+    pgw_system (system_cmd, PGW_ABORT_ON_ERROR, __FILE__, __LINE__);
+    bdestroy(system_cmd);
   }
   return 0;
 }
