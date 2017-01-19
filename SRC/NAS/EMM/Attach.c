@@ -2,9 +2,9 @@
  * Licensed to the OpenAirInterface (OAI) Software Alliance under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
- * The OpenAirInterface Software Alliance licenses this file to You under 
+ * The OpenAirInterface Software Alliance licenses this file to You under
  * the Apache License, Version 2.0  (the "License"); you may not use this file
- * except in compliance with the License.  
+ * except in compliance with the License.
  * You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -340,7 +340,8 @@ emm_proc_attach_request (
     REQUIREMENT_3GPP_24_301(R10_5_5_1_2_7_f);
     if (emm_ctx->is_has_been_attached) {
       OAILOG_TRACE (LOG_NAS_EMM, "EMM-PROC  - the new ATTACH REQUEST is progressed\n");
-      emm_data_context_silently_reset_procedures(emm_ctx); // TEST
+      // Following line of code creates a situation of double freeing. Hence commented
+      // emm_data_context_silently_reset_procedures(emm_ctx); // TEST
       emm_fsm_set_status(ue_id, emm_ctx, EMM_DEREGISTERED);
       emm_ctx = emm_data_context_remove (&_emm_data, emm_ctx);
       if (duplicate_enb_context_detected) {
