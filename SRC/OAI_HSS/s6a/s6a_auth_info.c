@@ -2,9 +2,9 @@
  * Licensed to the OpenAirInterface (OAI) Software Alliance under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
- * The OpenAirInterface Software Alliance licenses this file to You under 
+ * The OpenAirInterface Software Alliance licenses this file to You under
  * the Apache License, Version 2.0  (the "License"); you may not use this file
- * except in compliance with the License.  
+ * except in compliance with the License.
  * You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -211,15 +211,15 @@ s6a_auth_info_cb (
     CHECK_FCT (fd_msg_avp_hdr (avp, &hdr));
 
     if (hdr->avp_value->os.len == 3) {
-      if (apply_access_restriction (auth_info_req.imsi, hdr->avp_value->os.data) != 0) {
-        /*
-         * We found that user is roaming and has no right to do it ->
-         * * * * reject the connection
-         */
-        result_code = DIAMETER_ERROR_ROAMING_NOT_ALLOWED;
-        experimental = 1;
-        goto out;
-      }
+      // if (apply_access_restriction (auth_info_req.imsi, hdr->avp_value->os.data) != 0) {
+
+      //     // We found that user is roaming and has no right to do it ->
+      //     //           reject the connection
+
+      //   result_code = DIAMETER_ERROR_ROAMING_NOT_ALLOWED;
+      //   experimental = 1;
+      //   goto out;
+      // }
     } else {
       result_code = ER_DIAMETER_INVALID_AVP_VALUE;
       goto out;
